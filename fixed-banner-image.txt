@@ -1,0 +1,112 @@
+<style>
+  .cstm-img-banner {
+    max-width:1770px;
+    margin-inline:auto;
+    position: relative; 
+    padding: 200px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    background-image: url('{{ section.settings.bg-img | img_url: 'master' }}');
+    background-size: cover;
+    background-position: center; 
+    background-attachment: fixed;
+  }
+  
+  .cstm-img-banner::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); 
+    z-index: 1; 
+  }
+
+  .cstm-img-banner .row {
+    position: relative; 
+    z-index: 2; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-inline: auto;
+  }
+
+  .cstm-img-banner .row p {
+    max-width: 967px;
+    margin-inline: auto;
+    text-align: center;
+    color: #fff;
+  }
+
+  .cstm-img-banner .row h2 {
+    color: #fff;
+    text-align:center;
+    margin-block: 0;
+  }
+
+  .cstm-img-banner button {
+    z-index: 2;
+  }
+
+  @media(max-width:767px){
+    .cstm-img-banner{
+      padding:75px 20px;
+    }
+  }
+  
+  
+</style>
+
+<div class="cstm-img-banner">
+  <div class="row">
+    <h2>{{ section.settings.header2 }}</h2>
+    <p>{{ section.settings.paragraph }}</p>
+    <a class="button button--primary" href="{{ section.settings.btn-link }}">{{ section.settings.btn-name }}</a>
+    </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Banner Image",
+  "class": "banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg-img",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "header2",
+      "label": "Headings"      
+    },
+    {
+      "type": "textarea",
+      "id": "paragraph",
+      "label": "Paragraph"      
+    },
+    {
+      "type": "text",
+      "id": "btn-name",
+      "label": "Button Name"      
+    },
+    {
+      "type": "url",
+      "id": "btn-link",
+      "label": "Button Link"      
+    }   
+    
+    
+  ],
+  "presets": [
+    {
+      "name": "Banner Image",
+      "category": "banner"
+    }
+  ]
+}
+{% endschema %}

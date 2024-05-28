@@ -1,0 +1,229 @@
+<style>
+    .video-gallery {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding-block: 60px;
+    }
+
+    .big-video {
+        width: 100%;
+        height: 400px; /* Adjust height as needed */
+    }
+
+    .small-videos {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+
+    .small-video {
+        width: 100%;
+        height: auto;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .small-video img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .video-title {
+        width: 100%;
+        color: #000;
+        padding: 5px;
+        box-sizing: border-box;
+        text-align: center;
+        font-size: 14px;
+        margin: 0; /* Remove default margin */
+    }
+
+
+
+
+  .pagination {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .pagination button {
+        background: var(--product-action-bg-hover);
+        color: var(--product-action-color-hover);
+        padding: 5px 10px;
+        border: none;
+        font-weight: bold;
+        margin-left: 12px;
+        border-color: var(--product-action-border-hover);
+        box-shadow: var(--btn-3-horizontal-length) var(--btn-3-vertical-length) var(--btn-3-blur-radius) var(--btn-3-spread) var(--btn-3-all-bg-opacity-hover) var(--btn-3-inset);
+    }
+
+    .pagination button:hover {
+          background-color: #ff0000;
+    }
+
+      button.play-button {
+        color: white;
+    }
+
+    .play-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+          background-color: #ff0000;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .small-video:hover .play-button {
+      display: flex;
+    }
+</style>
+
+
+<div class="video-gallery page-width page-width--narrow scroll-trigger animate--slide-in container">
+  <div class="big-video" id="bigVideo">
+    <!-- Big video will go here -->
+  </div>
+  <div class="small-videos">
+    <!-- Video items loop -->
+    {% for block in section.blocks %}
+      {% assign vid_url = block.settings.vid_url.id %}
+      {% assign vid_strip_url = vid_url | split: 'v=' | last %}
+      {% assign vid_strip_url = vid_strip_url | split: '&' | first %}
+
+      <div class="small-video" onclick="playVideo('{{ vid_strip_url }}')">
+        <img
+          src="https://img.youtube.com/vi/{{ vid_strip_url }}/maxresdefault.jpg"
+          alt="Video 1"
+          width="300px"
+          height="auto"
+        >
+        <button class="play-button">&#9658;</button>
+        <!-- Play button -->
+        <p class="video-title"></p>
+      </div>
+    {% endfor %}
+  </div>
+  <!-- Pagination -->
+  <div class="pagination">
+    <button id="prevBtn">Previous</button>
+    <button id="nextBtn">Next</button>
+  </div>
+</div>
+
+<script>
+   $(document).ready(function() {
+      function fetchVideoTitle(videoId, element) {
+        $.ajax({
+            url: `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`,
+            method: 'GET',
+            success: function(response) {
+                $(element).find('.video-title').text(response.title);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching video title:', error);
+            }
+        });
+    }
+
+    // Fetch and display title for each video
+    $('.small-video').each(function() {
+        const videoId = $(this).attr('onclick').match(/'(.*?)'/)[1];
+        fetchVideoTitle(videoId, this);
+    });
+        setTimeout(function() {
+            const firstSmallVideo = $('.small-video').first();
+            const onclickAttribute = firstSmallVideo.attr('onclick');
+            const videoId = onclickAttribute.match(/'(.*?)'/)[1];
+            playVideo(videoId);
+        }, 500); // 500 milliseconds delay (.5 sec)
+
+        function playVideo(videoId) {
+            const bigVideo = $('#bigVideo');
+            bigVideo.html(`<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`);
+            console.log('Big video is being loaded...');
+        }
+
+        // Event binding for small videos
+        $('.small-video').click(function() {
+            const videoId = $(this).attr('onclick').match(/'(.*?)'/)[1];
+            playVideo(videoId);
+        });
+
+  // Pagination
+  let currentPage = 1;
+  const videosPerPage = 6; // Adjust as needed
+  const videos = $('.small-video');
+
+  function showVideos(page) {
+    videos.hide().slice((page - 1) * videosPerPage, page * videosPerPage).show();
+  }
+
+  showVideos(currentPage);
+
+  $('#prevBtn').click(function() {
+    if (currentPage > 1) {
+      currentPage--;
+      showVideos(currentPage);
+    }
+  });
+
+  $('#nextBtn').click(function() {
+    if (currentPage < Math.ceil(videos.length / videosPerPage)) {
+      currentPage++;
+      showVideos(currentPage);
+    }
+  });
+
+
+
+    });
+</script>
+
+{% schema %}
+  {
+    "name": "Youtube Custom Gallery",
+    "settings": [
+     {
+      "type": "header",
+      "content": "Video Gallery"
+    }
+    ],
+    "blocks":[
+       {
+       "type": "Video",
+       "name": "Video",
+       "settings":[
+        {
+        "type": "video_url",
+        "id": "vid_url",
+        "accept": [
+            "youtube",
+            "vimeo"
+        ],
+        "default": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
+        "label": "t:sections.video.settings.video_url.label",
+        "info": "t:sections.video.settings.video_url.info"
+        }
+
+       ]
+     }
+    ],
+    "presets": [
+    {
+      "name": "Youtube Custom Gallery",
+      "category": "Video"
+    }
+  ]
+}
+{% endschema %}

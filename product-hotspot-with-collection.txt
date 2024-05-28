@@ -1,0 +1,407 @@
+/* Note: Add Slick Slider CDN on theme.liquid <head> */
+
+
+<style>
+.cstm-hotspot {
+    max-width: 1770px;
+    margin-inline: auto;
+    width: 100%;
+    padding: 100px 50px;
+    background-color: #F5F5F5;
+  overflow-x: hidden;
+  }
+
+  .cstm-hotspot .row {
+    max-width: 1440px;
+    margin-inline: auto;
+    display: flex;
+    gap: 40px;
+  }
+
+  .cstm-hotspot h2 {
+    margin-top: 0px;
+  }
+
+  .cstm-hotspot .col1 {
+    position: relative;
+    flex:1;
+  }
+
+  .cstm-hotspot .col2 {
+     flex:1;
+     position: relative;
+  }
+
+
+   .product-img{
+    max-width: 330px;
+    min-height: 500px;
+    object-fit: cover;
+    /* width:100%;
+    height:auto;
+     object-fit: cover; */
+  }
+  
+
+  .cstm-hotspot .hotspot-btn{
+    transform: scale(1.1);
+    animation: pulse 1s infinite;
+    background: black;
+    border-radius: 50%;
+    position: absolute;
+  }
+
+  .cstm-hotspot .col1 .hs-img {
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    border-radius: 20px;
+  }
+
+  .product-carousel {
+    display: flex;
+    gap: 20px;
+    max-width: 700px;
+    
+  }
+
+  .product-desc {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  @media screen and (max-width: 768px) {
+    .cstm-hotspot .row {
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .cstm-hotspot .col1,
+    .cstm-hotspot .col2 {
+      flex: none;
+      width: 100%;
+    }
+
+    .cstm-hotspot .hotspot-btn1,
+    .cstm-hotspot .hotspot-btn2,
+    .cstm-hotspot .hotspot-btn3 {
+      position: relative;
+      left: auto;
+      top: auto;
+      transform: none;
+      animation: none;
+    }
+  }
+  @keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.3);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
+	}
+}
+
+
+
+    @media(max-width:768px){
+       .cstm-hotspot{
+            padding: 75px 20px;
+       }
+      
+    }
+
+
+
+  .product-col{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background:white;
+  }
+  .product-details{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    font-size:12px;
+    color:#000;
+  }
+
+  
+  .productimage{
+    display:flex;
+  }
+
+  .cstm-product-card{
+    color:#000;
+    display:flex;
+  }
+
+  .carousel-item{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+.collection-slider-btn-left{
+   position: absolute; top: 45%; left:0;
+}
+.collection-slider-btn-right{
+  position: absolute; top: 45%; right:0;
+}
+
+  @media(max-width:1359px){
+        .cstm-hotspot .row{
+           flex-direction: column;
+           align-items: center;
+        }   
+  }
+
+.slick-initialized .slick-slide  {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+}
+ 
+
+</style>
+
+
+<div class="cstm-hotspot">
+  <div class="row">
+   <div class="col1">
+    <img src="{{ section.settings.left-image | img_url: "master" }}" style="border-radius:20px;" class="hs-img">
+
+  
+     
+    {% for block in section.blocks %}
+        {% assign product_handle = block.settings.product-url %}
+        {% assign product1 = all_products[product_handle] %}
+        <style>
+            .hotspot-btn-{{ forloop.index }} {
+                left: {{ block.settings.position-x }}%;
+                top: {{ block.settings.position-y }}%;
+            }
+            .hotspot-product-{{ forloop.index }} {
+                position: absolute;
+                left: {{ block.settings.position-x }}%;
+                top: {{ block.settings.position-y }}%;
+                margin-left: 30px;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s, visibility 0.3s; /* Transition for opacity and visibility */
+                background: white;
+                border: 1px solid #ccc;
+                padding: 1px;
+                border-radius: 5px;
+            }
+            .hotspot-div-{{ forloop.index }}:hover .hotspot-product-{{ forloop.index }},
+            .hotspot-product-{{ forloop.index }}:hover {
+                opacity: 1;
+                visibility: visible;
+            }
+        </style>
+
+        <div class="hotspot-div-{{ forloop.index }}" onmouseover="showHotspotProduct({{ forloop.index }})" onmouseout="hideHotspotProduct({{ forloop.index }})">
+            <img src="https://cdn.shopify.com/s/files/1/0878/3354/2975/files/hotspot.svg?v=1715233169" class="hotspot-btn hotspot-btn-{{ forloop.index }}" width="25px" height="25px">
+
+            <div class="hotspot-product hotspot-product-{{ forloop.index }}">
+                <a href="{{ product1.url }}" target="_blank">
+                    <div class="product-col">
+                        <div class="productimage">
+                            <img src="{{ product1.featured_image | img_url: '50px' }}" alt="{{ product1.title }}" style="max-width:50px;">
+                        </div>
+
+                        <div class="product-details">
+                            <span>{{ product1.title }}</span>
+                            <span>{{ product1.price | money }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+    <div class="col2">
+      <h2>{{ section.settings.header2 }}</h2>
+      <p>{{ section.settings.paragraph }}</p>     
+
+      <div class="product-carousel">
+
+        
+       
+    
+
+          {% assign collection_handle = section.settings.product-frm-coll %}
+        {% assign collection1 = collections[collection_handle] %}
+        
+        {% if collection1 %}
+          {% for product in collection1.products %}
+
+        <div class="cstm-prod-div">
+        <a href="{{ product.url }}" target="_blank" class="cstm-product-card">  
+        <div class="carousel-item">
+              <img src="{{ product.featured_image | img_url: 'master' }}" alt="{{ product1.title }}" style="border-radius:20px;" class="product-img">         
+              <div class="product-desc">
+              <span>{{ product.title }}</span>
+              <span>{{ product.price | money }}</span>
+              </div>
+              <div class="product-rev">
+              <img src="https://cdn.shopify.com/s/files/1/0878/3354/2975/files/star-icon.png?v=1715158477" width="141px" height="auto">              
+              </div>
+        </div>
+        </a>
+        </div>
+      {% endfor %}
+        {% else %}
+          <p>No products found in the collection.</p>
+        {% endif %}
+
+          
+      </div>
+
+      
+    <div class="collection-slider-btn-left" >
+        <div class="prev"><img src="https://cdn.shopify.com/s/files/1/0878/3354/2975/files/arrow-icon.svg?v=1715842932" width="50px"></div>
+     
+    </div>
+
+        <div class="collection-slider-btn-right" >
+           <div class="next"><img src="https://cdn.shopify.com/s/files/1/0878/3354/2975/files/righ-arrow-icon.svg?v=1715843326" width="50px"></div>
+        </div>
+    </div>
+    
+  </div>
+</div>
+
+
+
+
+
+
+
+<script>
+    function showHotspotProduct(index) {
+        clearTimeout(window['hideTimeout' + index]);
+        var product = document.querySelector('.hotspot-product-' + index);
+        product.style.opacity = '1';
+        product.style.visibility = 'visible';
+    }
+
+    function hideHotspotProduct(index) {
+        var product = document.querySelector('.hotspot-product-' + index);
+        window['hideTimeout' + index] = setTimeout(function() {
+            product.style.opacity = '0';
+            product.style.visibility = 'hidden';
+        }, 300); // Adjust the delay as needed
+    }
+
+    
+
+   $('.product-carousel').slick({
+        arrows: true,
+        infinite: true,
+        speed: 300,
+        slidesToShow: 2,
+        prevArrow: $('.prev'),
+        nextArrow: $('.next'),
+        responsive: [
+            {
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1 // Adjust the number of slides to show at 767px width
+                }
+            }
+        ]
+    });
+</script>
+
+
+
+
+
+
+
+
+{% schema %}
+{
+  "name": "Product Hotspot",
+  "class": "banner",
+  "settings": [
+     {
+      "type": "header",
+      "content": "Left Column"
+    },
+    {
+      "type": "image_picker",
+      "id": "left-image",
+      "label": "Left Image(Left Column)"
+    },
+    {
+      "type": "header",
+      "content": "Right Column"
+    },
+    {
+      "type": "text",
+      "id": "header2",
+      "label": "Header"
+    },
+    {
+      "type": "textarea",
+      "id": "paragraph",
+      "label": "Sub Header"
+    },
+    {
+      "type": "collection",
+      "id": "product-frm-coll",
+      "label": "Select Collection(Right Column)"
+    }
+     
+  ],
+  "blocks":[
+       {
+       "type": "Hotspot-Button",
+       "name": "Hotspot Button",
+       "settings":[ 
+         {
+           "id": "product-url",
+           "type": "product",
+           "label": "Hotspot Button Link"
+         },
+         {
+           "type": "number",
+           "id": "position-x",                
+           "label": "Top-Bottom Position (%)",
+           "default": 0
+         },       
+         {
+           "type": "number",
+           "id": "position-y",                
+           "label": "Left-Right Position(%)",
+           "default": 0
+         }       
+         
+       ]
+     } 
+    ],
+
+
+  
+  
+  "presets": [
+    {
+      "name": "Product Hotspot",
+      "category": "banner"
+    }
+  ]
+}
+{% endschema %}

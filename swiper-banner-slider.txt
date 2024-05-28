@@ -1,0 +1,247 @@
+Place it below the <head> of the theme.liquid
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+/>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+
+
+
+<!-- Slider main container -->
+<style>
+*,
+*:before,
+*:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-size: 10vw;
+  text-align: center;
+  color: #fff;
+  transition: 0.5s all;
+}
+.swiper-pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+/* button style */
+.swiper-pagination-bullet {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  height: auto;
+  margin: 0 10px;
+  background-color: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.swiper-pagination-bullet span {
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 700;
+}
+/* button circle */
+.progress {
+  transform: rotate(-90deg);
+}
+.circle-origin {
+  fill: rgba(0, 0, 0, .16);
+  /* stroke: rgb(255, 255, 255); */
+  stroke: #FFF;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-dasharray: 30.664px;
+  stroke-dashoffset: 30.664px;
+}
+
+.swiper-pagination-bullet-active .circle-origin {
+  animation: progress 5s;
+}
+
+@keyframes progress {
+  0% {
+    stroke-dashoffset: 30.664px;
+  }
+
+  90% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: -30.664px;
+  }
+}
+
+  /* Keyframes for slide-up animation */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Apply animation to banner-content */
+.banner-content {
+  animation: slideUp 1s ease-out;
+}
+
+  .banner-content{
+    display:flex;
+    flex-direction:column;
+    gap: 0px;
+    
+  }
+
+  </style>
+
+
+
+
+
+
+<div class="swiper">
+  <!-- Additional required wrapper -->
+  <div class="swiper-wrapper">
+    <!-- Slides -->
+    <div class="swiper-slide" style="background-image: url('https://kromkendama.com/cdn/shop/files/Krom-kendama-pop_1920x720.jpg?v=1631534127'); background-repeat: no-repeat; background-position: center; background-size:cover;">
+            <div class="banner-content">
+            <h1 class="text-3xl md:text-5xl font-bold">PLAY LIFE</h1>           
+            <a href="#" class="text-sm mt-8 text-white bg-black px-4 py-2">KROM SHOP</a>
+            </div>
+    </div>
+    
+    <div class="swiper-slide" style="background-image: url('https://kromkendama.com/cdn/shop/files/Dwesty.jpg?v=1715246610'); background-repeat: no-repeat; background-position: center; background-size:cover;">
+      
+    </div>
+    
+    <div class="swiper-slide" style="background-image: url('https://kromkendama.com/cdn/shop/files/Billede_25.04.2024_23.04.37.jpg?v=1716011815'); background-repeat: no-repeat; background-position: center; background-size:cover;">
+      
+    </div>
+    
+
+    {% comment %}
+    {% for block in section.blocks %}
+      <div class="swiper-slide" style="background-image: url('https://kromkendama.com/cdn/shop/files/Krom-kendama-pop_1920x720.jpg?v=1631534127'); background-repeat: no-repeat; background-position: center; background-size:cover;"></div>
+   
+           
+    {% endfor %}
+   {% endcomment %}
+
+    
+  </div>
+  
+  <!-- If we need pagination -->
+  <div class="swiper-pagination"></div>
+
+  <!-- If we need navigation buttons -->
+  <!-- <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div> -->
+
+  <!-- If we need scrollbar -->
+  <!-- <div class="swiper-scrollbar"></div> -->
+</div>
+
+
+<script>
+const slide = document.querySelectorAll(".swiper-slide");
+for (const i of slide) {
+  const random = (number) => Math.floor(Math.random() * (number + 1));
+  const rndCol = `rgb(${random(255)},${random(255)},${random(255)})`;
+  i.style.backgroundColor = rndCol;
+}
+const swiperOptions = {
+  loop: "infinite",
+  effect: "fade",
+  autoplay: {
+    delay: 5000,
+    disableOnInteraction: false
+  },
+  navigation: {
+    nextEl: ".swiper-button-next",
+    prevEl: ".swiper-button-prev"
+  },
+  // custom pagination
+  pagination: {
+    el: ".swiper-pagination",
+    clickable: true,
+    renderBullet: function (i, className) {
+      return `
+   <button class="${className}">
+  <svg class="progress" width="11" height="11"><circle class="circle-origin" r="5" cx="5.5" cy="5.5"></circle></svg><span style="display:none;">${
+      i + 1
+  }</span>
+</button>
+      `;
+    }
+  }
+};
+
+const swiper = new Swiper(".swiper", swiperOptions);
+
+</script>
+
+
+
+{% schema %}
+  {
+    "name": "Banner Sliders",
+    "settings": [
+      {
+        "type": "text",
+        "id": "header",
+        "label": "Header"
+      },
+      {
+        "type": "text",
+        "id": "button-text",
+        "label": "Button Label"
+      },
+      {
+        "type": "url",
+        "id": "button-url",
+        "label": "Button Link"
+      }
+      
+    ],
+    "blocks":[
+       {
+       "type": "slide-banner",
+       "name": "Slide",
+       "settings":[ 
+         {
+          "type": "image_picker",
+           "id": "slide-image",          
+           "label": "Slide Image"
+         }       
+         
+       ]
+     } 
+    ],
+    "presets": [
+    {
+      "name": "Banner Sliders",
+      "category": "banner"
+    }
+  ]
+  }
+  
+{% endschema %}

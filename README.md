@@ -1,6 +1,6 @@
 # Shopify-Snippets
 
-Add all codes per one file
+Add all codes per files
 
 Structure should be
 1. CSS

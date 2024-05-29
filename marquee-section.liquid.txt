@@ -1,0 +1,67 @@
+<style>
+.marquee {
+  position: relative;
+  max-width: 100%;
+  padding: 10px;
+  overflow-x: hidden;
+  background: {{ section.settings.bg-color }};
+}
+
+.track {
+  display: flex;
+  white-space: nowrap;
+  will-change: transform;
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marq-txt {
+  font-family: 'JerseyM54' !important;
+  color: {{ section.settings.txt-color }};
+  padding-right: 10px; /* Adjust as needed for spacing */
+}
+</style>
+
+<div class="marquee">
+  <div class="track">
+    {% for i in (1..20) %}
+      <span class="marq-txt text-sm">{{ section.settings.marquee-text }}</span>
+    {% endfor %}
+    {% for i in (1..20) %}
+      <span class="marq-txt text-sm">{{ section.settings.marquee-text }}</span>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Marquee Section",
+  "settings": [   
+    {
+      "type": "text",
+      "id": "marquee-text",
+      "label": "Text"
+    },
+     {
+      "type": "color",
+      "id": "txt-color",
+      "label": "Font Color"
+    },    
+     {
+      "type": "color",
+      "id": "bg-color",
+      "label": "Background Color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee Section",
+      "category": "banner"
+    }
+  ]
+}
+{% endschema %}

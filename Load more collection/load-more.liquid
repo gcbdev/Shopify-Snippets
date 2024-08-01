@@ -1,0 +1,126 @@
+<section class="home-our-products hop">
+  <div class="container-fluid">
+    <div class="row">
+      {% if section.settings.title != blank %}
+        <div class="section-header text-center">
+          <h2>{{ section.settings.title | escape }}</h2>
+        </div>
+      {% endif %}
+      {% for block in section.blocks limit: section.blocks.size %}
+        {%- assign collection = collections[block.settings.collection] -%}
+        {% assign displayed_item = 4 %}
+        {% assign products = collections.handle %}
+        {% assign total_products = collection.all_products_count %}
+        <div class="col-xs-12">
+          <h2>{{ collection.title | upcase }}</h2>
+        </div>
+        <div class="divider dark-red"></div>
+        <div class="custom-collections-grid col-xs-12 product__items clearfix custom-collections-grid-more-{{collection.handle}}">
+          {% paginate collection.products by displayed_item %}
+            {% for product in collection.products %}
+              {% assign ctr = ctr | plus: 1 %}
+              {% include 'product-card-grid-custom', ctr: ctr, total_products: total_products %}
+            {% endfor %}
+            {% if paginate.next %}
+              <div class="vertically-align-content vertically-align-content-more-{{collection.handle}}">
+                <div class="vertically-align-child">
+                  <div
+                    class="more more-{{collection.handle}}"
+                    btn-handle="more-{{collection.handle}}"
+                    link="{{ paginate.next.url }}"
+                  >
+                    LOAD <br>
+                    MORE
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endpaginate %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"
+></script>
+<script>
+  $(document).ready(function(){
+      loadmoreByButton();
+  });
+
+  function loadmoreByButton(){
+
+      var moreButon =  $('.more');
+      console.log(moreButon);
+
+      $(moreButon).each(function(){
+
+          var btnHandle = $(this).attr('btn-handle');
+          var nextUrl = $(this).attr("link");
+
+          $('body').on('click', '.'+btnHandle+'', function(){
+              console.log($(this));
+              $.ajax({
+              url: nextUrl,
+              type: 'GET',
+              beforeSend: function() {
+                  $('.vertically-align-content-'+btnHandle).remove();
+              }
+              })
+              .done(function(data) {
+                  $('.custom-collections-grid-'+btnHandle).append($(data).find('.custom-collections-grid-'+btnHandle).html());
+                  nextUrl = $(data).find('.more').attr("link");
+              });
+          });
+
+      });
+
+  }
+</script>
+
+{% schema %}
+{
+    "name": "Load Collection",
+    "class": "index-section",
+    "max_blocks": 12,
+    "settings":[
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Our Products"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "load_collection",
+            "name": "Collection",
+            "settings": [
+                {
+                    "label": "Collection",
+                    "id": "collection",
+                    "type": "collection"
+                },
+                {
+                    "type":   "range",
+                    "id":     "displayed_items",
+                    "min":       1,
+                    "max":       8,
+                    "step":      1,
+                    "label":     "Product items",
+                    "default":   3
+                }
+            ]
+        }
+    ],
+    "presets":[
+        {
+            "name": "Load Collection",
+            "category": "Collection"
+        }
+    ]
+}
+{% endschema %}

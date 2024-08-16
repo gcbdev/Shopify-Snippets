@@ -1,5 +1,7 @@
 <div class="slider-container">
   <div class="slider-div">
+    <h2>Thanks to our partners for amazing prizes!</h2>
+
     <div class="slider-main-container">
       <section class="logos-slider">
         {% if section.blocks.size > 0 %}
@@ -19,39 +21,128 @@
 </div>
 
 <style>
-  add css here...
+  .slider-container {
+    text-align: center;
+    padding: 100px 50px;
+    background: #fbfbfb;
+  }
+
+  .slider-container h2,
+  .slider-container p {
+    max-width: 50%;
+    margin: 0 auto;
+  }
+
+  .slider-container h2 {
+    color: #0080c6;
+  }
+
+  .logos-slider img {
+    width: 80px;
+  }
+
+  section.logos-slider {
+    margin-top: 40px;
+    max-width: 60vw;
+    margin: 0 auto;
+    align-items: center;
+  }
+
+  .slider-main-container {
+    padding-top: 40px;
+  }
+
+  .slider-main-container .slide {
+    height: 100%;
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .slick-dots {
+    bottom: -65px !important;
+  }
+
+  .slick-dots li button:before {
+    font-size: 12px;
+  }
+
+  .slick-active button:before {
+    color: #167bb7 !important;
+  }
+
+  @media (max-width: 767px) {
+    .slider-container {
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    .slider-container h2,
+    .slider-container p {
+      max-width: 100%;
+    }
+  }
 </style>
 
 {% schema %}
-  {
-    "name": "Logo Slider",
-    "class": "banner",
-     "max_blocks": 10,
-    "settings": [
-      {
-        "type": "text",
-        "id": "heading",
-        "label": "Add H1 Here"
-      }
-    ],
-   "blocks": [
-     {
-       "name": "Slide",
-       "type": "slide",
-       "settings": [
-         {
-           "type": "image_picker",
-           "id": "image",
-           "label": "Image"
-         }
-       ]
-     }
-   ],
-    "presets": [
-      {
-        "name": "Logo Slider",
-        "category": "Logo Slider"
-      }
-    ]
-  }
+{
+  "name": "Logo Slider",
+  "class": "banner",
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Add H1 Here"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Slide",
+      "type": "slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logo Slider",
+      "category": "Logo Slider"
+    }
+  ]
+}
 {% endschema %}
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.logos-slider').slick({
+      slidesToShow: 4,
+      slidesToScroll: 1,
+      autoplay: true,
+      autoplaySpeed: 2000,
+      arrows: true,
+      dots: true,
+      responsive: [
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 1
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1
+          }
+        }
+      ]
+    });
+  });
+</script>
